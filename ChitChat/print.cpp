@@ -1,9 +1,17 @@
+#include "print.h"
 
-void print()
+using namespace std;
+
+extern int Vnum;
+extern Hub *GraphList;
+extern EdgeState *EdgeList;
+
+
+void PrintHub()
 {
     int i;
     FILE *myfile;
-    myfile=fopen("result.txt","w+");
+    myfile=fopen("Hub.txt","w+");
     for(i=1;i<=Vnum;i++)
     {
         fprintf(myfile,"w:%d\n",i);
@@ -16,15 +24,29 @@ void print()
             fprintf(myfile,"%d ",*it);
         fprintf(myfile,"\n");
         fprintf(myfile,"Edge:");
-        for(vector<Edge>::iterator it=GraphList[i].CrossEdge.begin();it!=GraphList[i].CrossEdge.end();it++)
+        for(vector<Edge>::iterator it=GraphList[i].XYCrossEdge.begin();it!=GraphList[i].XYCrossEdge.end();it++)
             fprintf(myfile,"(%d,%d) ",it->u,it->v);
         fprintf(myfile,"\n");
         fprintf(myfile,"\n\n");
     }
+     fclose(myfile);
+}
+
+void PrintEdge()
+{
+    int i;
+    FILE *myfile;
+    myfile=fopen("Edge.txt","w+");
     for (i=1;i<=Vnum;i++)
     {
         for (map<int,Strategy>::iterator it=EdgeList[i].begin();it!=EdgeList[i].end();it++)
            fprintf(myfile,"%d->%d state:%d %d %d\n",i,it->first,it->second.sign,it->second.Push,it->second.Pull);
     }
     fclose(myfile);
+}
+
+void Print()
+{
+    PrintHub();
+    PrintEdge();
 }

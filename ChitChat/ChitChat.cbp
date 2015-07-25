@@ -32,7 +32,14 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="PQueue.cpp" />
+		<Unit filename="PQueue.h" />
+		<Unit filename="inital.cpp" />
+		<Unit filename="inital.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="main.h" />
+		<Unit filename="print.cpp" />
+		<Unit filename="print.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

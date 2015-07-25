@@ -14,3 +14,40 @@
 	<map>
 	<algorithm>
 
+1437829857 source:g:\project\chitchat\chitchat\inital.cpp
+	"inital.h"
+
+1437812275 source:g:\project\chitchat\chitchat\main.cpp
+	<cstdio>
+	<cstring>
+	<iostream>
+	"main.h"
+	"inital.h"
+	<map>
+	<queue>
+	<vector>
+	<algorithm>
+
+1437829633 source:g:\project\chitchat\chitchat\print.cpp
+	"print.h"
+
+1437812249 source:g:\project\chitchat\chitchat\pqueue.cpp
+
+1437829525 g:\project\chitchat\chitchat\main.h
+	<map>
+	<vector>
+
+1437809583 g:\project\chitchat\chitchat\print.h
+	<cstdio>
+	<cstring>
+	<vector>
+	"main.h"
+
+1437829813 g:\project\chitchat\chitchat\inital.h
+	<cstdio>
+	<cstdlib>
+	<cstring>
+	<algorithm>
+	<cmath>
+	"main.h"
+
