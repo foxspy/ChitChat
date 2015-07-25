@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1437723459 source:g:\论文资料\piggyback\chitchat\main.cpp
+	<stdio.h>
+	<string.h>
+	<vector>
+	<map>
+	<algorithm>
+
+1437743524 source:g:\piggyback\chitchat\main.cpp
+	<stdio.h>
+	<string.h>
+	<iostream>
+	<vector>
+	<map>
+	<algorithm>
+
