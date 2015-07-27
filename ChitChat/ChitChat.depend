@@ -17,7 +17,7 @@
 1437918310 source:g:\project\chitchat\chitchat\inital.cpp
 	"inital.h"
 
-1437976493 source:g:\project\chitchat\chitchat\main.cpp
+1437981607 source:g:\project\chitchat\chitchat\main.cpp
 	<cstdio>
 	<cstring>
 	<iostream>
@@ -43,7 +43,7 @@
 	<vector>
 	"main.h"
 
-1437829813 g:\project\chitchat\chitchat\inital.h
+1437980590 g:\project\chitchat\chitchat\inital.h
 	<cstdio>
 	<cstdlib>
 	<cstring>

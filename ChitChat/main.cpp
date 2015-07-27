@@ -45,18 +45,27 @@ void MaxDenisty()
                 TmpEdge.u=it->vdx;
                 GraphList[vdx].EgSum-=GraphList[vdx].XDeg[itE->u];
                 GraphList[vdx].XDeg[itE->u]=0;
-                itE=std::lower_bound(GraphList[i].XYCrossEdge.begin(),GraphList[i].XYCrossEdge.end(),TmpEdge,comp1);
-                for(;itE->u!=TmpEdge.u;itE++)
+                itE=std::lower_bound(GraphList[vdx].XYCrossEdge.begin(),GraphList[vdx].XYCrossEdge.end(),TmpEdge,ecom1);
+                for(;itE->u!=TmpEdge.u;itE++){
                     GraphList[vdx].YDeg[itE->v]--;
-            }
+                    GraphList[vdx].TmpYDeg[itE->v]=GraphList[vdx].YDeg[itE->v];
+                }
             else if(it->vset==1){
                 if(EdgeList[vdx][it->vdx].sign==0){
                     EdgeList[vdx][it->vdx].sign=1;
                     RestEdge--;
                 }
                 EdgeList[vdx][it->vdx].Pull=1;
+                TmpEdge.v=it->vdx;
+                GraphList[vdx].EgSum-=GraphList[vdx].XDeg[itE->u];
+                GraphList[vdx].XDeg[itE->u]=0;
+                itE=std::lower_bound(GraphList[vdx].YXCrossEdge.begin(),GraphList[vdx].YXCrossEdge.end(),TmpEdge,ecom2);
+                for(;itE->u!=TmpEdge.u;itE++){
+                    GraphList[vdx].XDeg[itE->u]--;
+                    GraphList[vdx].TmpXDeg[itE->u]=GraphList[vdx].XDeg[itE->u];
             }
     }
+
 }
 
 void UpdateWithMax()

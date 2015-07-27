@@ -14,3 +14,5 @@ bool comp(Density *v1,Density *v2);
 void ReadInput();
 void OptHub();
 void inital();
+bool ecom1(Edge,Edge);
+bool ecom2(Edge,Edge);
