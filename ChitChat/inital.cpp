@@ -8,7 +8,7 @@ extern int *Dout;
 extern int *Din;
 extern double  *Rp;
 extern double  *Rc;
-extern DensityList  HubDensity; //Density for Hub Graph List
+extern HubDensity  HubDensityList; //Density for Hub Graph List
 extern DensityList *VDensity; //Density for each vertex in a HubGraph
 
 bool vsort(int a1,int a2)
@@ -26,53 +26,117 @@ bool esort(Edge Edge1,Edge Edge2)
         return Edge1.v<Edge2.v;
 }
 
-void UpdateWithMaxVertex(VSet TmpVset)
+bool ecom1(Edge Edge1,Edge Edge2)
 {
-    int vdx = TmpVset.vdx;
+    return Edge1.u<Edge2.u;
+}
+
+bool ecom2(Edge Edge1,Edge Edge2)
+{
+    return Edge1.v<Edge2.v;
+}
+
+bool compd(Density *D1,Density *D2)
+{
+    return D1->density<D2->density;
+}
+
+bool comphd(MaxHubDensity MD1,MaxHubDensity MD2)
+{
+    return MD1.density<MD2.density;
+}
+
+void UpdateNeighbor(int w,VSet MaxVset,int nvdx)
+{
+    //if max vertex in X set
+    vector<Density *>::iterator it1,it2,it3;
+    Density TmpDensity,*newDensity;
+    if(MaxVset.vset==0){
+       TmpDensity.density= GraphList[w].TmpYDeg[nvdx]/Rc[nvdx];
+       it1=std::lower_bound(VDensity[w].begin(),VDensity[w].end(),&TmpDensity,compd);
+       for(it2=it1;it2!=VDensity[w].end()&&(*it2)->density>TmpDensity.density-0.5;it2++)
+          if((*it2)->vdx==nvdx&&(*it2)->xoy==1){
+              VDensity[w].erase(it2);
+              GraphList[w].TmpYDeg[nvdx]--;
+              newDensity = new Density();
+              newDensity->vdx=nvdx;
+              newDensity->xoy=1;
+              newDensity->density=GraphList[w].TmpYDeg[nvdx]/Rc[nvdx];
+              for(it3=it2;it3!=VDensity[w].end()&&(*it3)->density>newDensity->density;it3++)
+                ;
+              VDensity[w].insert(it3,newDensity);
+          }
+    }
+    else {
+       TmpDensity.density= GraphList[w].TmpXDeg[nvdx]/Rp[nvdx];
+       it1=std::lower_bound(VDensity[w].begin(),VDensity[w].end(),&TmpDensity,compd);
+       for(it2=it1;it2!=VDensity[w].end()&&(*it2)->density>TmpDensity.density-0.5;it2++)
+          if((*it2)->vdx==nvdx&&(*it2)->xoy==0){
+              VDensity[w].erase(it2);
+              GraphList[w].TmpYDeg[nvdx]--;
+              newDensity = new Density();
+              newDensity->vdx=nvdx;
+              newDensity->xoy=0;
+              newDensity->density=GraphList[w].TmpYDeg[nvdx]/Rp[nvdx];
+              for(it3=it2;it3!=VDensity[w].end()&&(*it3)->density>newDensity->density;it3++)
+                ;
+              VDensity[w].insert(it3,newDensity);
+          }
+    }
+}
+
+void UpdateWithMaxVertex(int w,VSet MaxVset)
+{
+    int vdx = MaxVset.vdx;
     Edge TmpEdge;
     TmpEdge.u=vdx;
     vector<Edge>::iterator it;
-    if(TmpVset.vset==0){
+    if(MaxVset.vset==0){
         it=std::lower_bound(GraphList[vdx].XYCrossEdge.begin(),GraphList[vdx].XYCrossEdge.end(),TmpEdge,ecom1);
+        //for each neighbor
         for(;it->u!=vdx;it++)
-            GraphList[vdx].YDeg[it->v]--;
+            UpdateNeighbor(vdx,MaxVset,it->v);
     }
     else{
         it=std::lower_bound(GraphList[vdx].YXCrossEdge.begin(),GraphList[vdx].YXCrossEdge.end(),TmpEdge,ecom2);
-        for(;it->v!=vdx;it++){
-            GraphList[vdx].XDeg[it->u]--;
+        for(;it->v!=vdx;it++)
+            UpdateNeighbor(vdx,MaxVset,it->u);
     }
 }
+
+//make the deneset hub-graph
 void InitHubDenisty(int vdx)
 {
-    int step;
     VSet TmpVset;
+    MaxHubDensity TmpMaxHubDensity;
     double density;
     GraphList[vdx].maxdenest=GraphList[vdx].EgSum/GraphList[vdx].WSum;
-    step=0;
     while(VDensity[vdx].size()>0)
     {
         TmpVset.vdx = (*(VDensity[vdx].begin()))->vdx;
         TmpVset.vset= (*(VDensity[vdx].begin()))->xoy;
         GraphList[vdx].Order.push_back(TmpVset);
+        VDensity[vdx].erase(VDensity[vdx].begin());
         if(TmpVset.vset==0)
         {
-            GraphList[vdx].TmpEgSum-=Dout[vdx];
+            GraphList[vdx].TmpEgSum-=GraphList[vdx].TmpYDeg[TmpVset.vdx];
             GraphList[vdx].TmpWSum-=Rp[vdx];
         }
         else
         {
-            GraphList[vdx].TmpEgSum-=Din[vdx];
+            GraphList[vdx].TmpEgSum-=GraphList[vdx].TmpXDeg[TmpVset.vdx];
             GraphList[vdx].TmpWSum-=Rc[vdx];
         }
-            density=GraphList[vdx].TmpEgSum/GraphList[vdx].TmpWSum;
-            UpdateWithMaxVertex(TmpVset);
-        }
+        density=GraphList[vdx].TmpEgSum/GraphList[vdx].TmpWSum;
+        UpdateWithMaxVertex(vdx,TmpVset);
         if(density>GraphList[vdx].maxdenest){
+            GraphList[vdx].maxdenest=density;
             GraphList[vdx].index=VDensity[vdx].size();
-            step++;
+           }
         }
-    }
+        TmpMaxHubDensity.density=GraphList[vdx].maxdenest;
+        TmpMaxHubDensity.vdx=vdx;
+        HubDensityList.push_back(TmpMaxHubDensity);
 }
 
 bool comp(Density* v1,Density* v2)
@@ -80,6 +144,8 @@ bool comp(Density* v1,Density* v2)
     return v1->density<v2->density;
 }
 
+
+//Inital each hub-graph's each vertex density
 void InitalVDenisty()
 {
     int i;
@@ -225,6 +291,11 @@ void OptHub()
 
 void inital()
 {
+    int i;
     ReadInput();
     OptHub();
+    InitalVDenisty();
+    for(i=1;i<=Vnum;i++)
+        InitHubDenisty(i);
+    std::sort(HubDensityList.begin(),HubDensityList.end(),comphd);
 }

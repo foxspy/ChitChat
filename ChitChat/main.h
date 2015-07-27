@@ -8,6 +8,7 @@ struct Edge
 {
     int u;
     int v;
+    Edge(){}
     Edge(int x,int y)
     {
         u=x;
@@ -56,5 +57,13 @@ struct Density
     double density;
 };
 
+struct MaxHubDensity
+{
+    int vdx;
+    double density;
+};
+
 typedef map<int,Strategy> EdgeState;
 typedef vector<Density*> DensityList;
+typedef vector<MaxHubDensity> HubDensity;
+typedef vector<Edge> DesetEdge;
